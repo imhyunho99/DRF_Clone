@@ -16,15 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from example_app.views import hello,hello_rest_api
-from api_app.views import create_book_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', hello),
-    path('api/hello/', hello_rest_api, name='hello_rest_api'),
-    path('create/', create_book_api, name='create_book_api'),
+    path('api/', include('api_app.urls')),  # 여기에 연결
     path('api/', include('rest_framework.urls')),
-
-
 ]
