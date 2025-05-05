@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import Book, Author
+#all logics in serializers
 
 class BookSerializer(serializers.ModelSerializer):
-    author = serializers.CharField()  # 문자열로 직접 받음
+    author = serializers.CharField()
 
     class Meta:
         model = Book
