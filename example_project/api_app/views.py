@@ -1,11 +1,18 @@
-from django.shortcuts import render
-from .serializers import BookSerializer
-from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from .models import Book
+from .serializers import BookSerializer
 
 
-@api_view(['POST']) #url : /create body { title, author, publication_date, price }
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+
+@api_view(['POST'])  # /create
 @permission_classes([AllowAny])
 def create_book(request):
     serializer = BookSerializer(data=request.data)
@@ -14,38 +21,47 @@ def create_book(request):
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
-@api_view(['GET']) #url : /list
+
+@api_view(['GET'])  # /list
 @permission_classes([AllowAny])
 def get_books(request):
-    data = BookSerializer.read()
-    return Response(data)
+    books = Book.objects.all()
+    serializer = BookSerializer(books, many=True)
+    return Response(serializer.data)
 
 
-@api_view(['POST']) #url : /delete body { id }
+@api_view(['POST'])  # /delete
 @permission_classes([AllowAny])
 def delete_book(request):
-    book_id = request.data.get('id')  # POST body 'id':
-
+    book_id = request.data.get('id')
     if not book_id:
         return Response({"error": "Book id is required"}, status=400)
 
-    success = BookSerializer.delete(book_id)
-    if success:
+    try:
+        book = Book.objects.get(id=book_id)
+        book.delete()
         return Response({"message": "Book deleted"}, status=200)
-    return Response({"error": "Book not found"}, status=404)
+    except Book.DoesNotExist:
+        return Response({"error": "Book not found"}, status=404)
 
 
-@api_view(['POST']) #url : /delete body { id, title, author, publication_date, price }
+@api_view(['POST'])  # /update
 @permission_classes([AllowAny])
 def update_book(request):
     book_id = request.data.get('id')
     if not book_id:
         return Response({"error": "Book id is required"}, status=400)
 
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        return Response({"error": "Book not found"}, status=404)
+
     update_data = request.data.copy()
     update_data.pop('id', None)
 
-    updated = BookSerializer.update(book_id, update_data)
-    if updated:
-        return Response(updated, status=200)
-    return Response({"error": "Book not found"}, status=404)
+    serializer = BookSerializer(book, data=update_data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
