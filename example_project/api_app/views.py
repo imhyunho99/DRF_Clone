@@ -7,12 +7,19 @@ from .serializers import BookSerializer
 from rest_framework import status
 
 
-
+"""
+ViewSet
+"""
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes([AllowAny])
 
 
+
+"""
+Serializer
+"""
 
 @api_view(['POST'])  # /create
 @permission_classes([AllowAny])
@@ -25,13 +32,8 @@ def create_book(request):
 
 
 @api_view(['GET'])  # /list
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_books(request):
-    print("Logged in as:", request.user)  # 추가
-
-    if request.user.username != 'test':
-        return Response({'detail': 'You do not have permission to view this.'}, status=status.HTTP_403_FORBIDDEN)
-
     books = Book.objects.all()
     serializer = BookSerializer(books, many=True)
     return Response(serializer.data)
@@ -95,7 +97,3 @@ class UserLoginView(generics.GenericAPIView):
             'access': str(refresh.access_token),
         }
         return Response(response)
-
-"""@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-"""

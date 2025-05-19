@@ -1,7 +1,9 @@
 from django.urls import path, include
 from .views import create_book, get_books,delete_book, update_book
-from .views import BookViewSet
 from rest_framework import routers
+from django.urls import path, include
+from .views import BookViewSet, UserRegistrationView, UserLoginView
+
 
 router = routers.DefaultRouter()
 router.register('books', BookViewSet)
