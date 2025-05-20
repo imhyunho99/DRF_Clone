@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, LoginView, LogoutView, UserDetailView, DeleteUserView
+from .views import RegisterView, LoginView, LogoutView, UserDetailView, DeleteUserView, TokenRegisterView, TokenLoginView, TokenLogoutView, TokenUserDetailView, TokenDeleteUserView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -7,4 +7,9 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('me/', UserDetailView.as_view(), name='user-detail'),
     path('delete/', DeleteUserView.as_view(), name='user-delete'),
+    path('tokenregister/', TokenRegisterView.as_view(), name='tokenregister'),
+    path('tokenlogin/', TokenLoginView.as_view(), name='tokenlogin'),
+    path('tokenlogout/', TokenLogoutView.as_view(), name='tokenlogout'),
+    path('tokenme/', TokenUserDetailView.as_view(), name='tokenuser-detail'),
+    path('tokendelete/', TokenDeleteUserView.as_view(), name='tokenuser-delete'),
 ]
