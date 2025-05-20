@@ -23,7 +23,7 @@ class LoginView(APIView):
             return Response(UserSerializer(user).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class LogoutView(APIView):
+class LogoutView(APIView): #Postman test => Header =>  X-CSRFToken : cookie(csrf token specify)
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
