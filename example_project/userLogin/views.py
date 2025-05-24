@@ -141,8 +141,8 @@ class JWTRegisterView(generics.CreateAPIView):
 
 class JWTLoginView(APIView):
     permission_classes = [permissions.AllowAny]
-
     def post(self, request):
+
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
