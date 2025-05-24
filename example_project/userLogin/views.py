@@ -58,7 +58,7 @@ class DeleteUserView(APIView):
     def delete(self, request):
         request.user.delete()
         return Response(
-            {"message": "회원 탈퇴 완료"}, status=status.HTTP_204_NO_CONTENT
+            {"message": "Status 204 No Content"}, status=status.HTTP_204_NO_CONTENT
         )
 
 
@@ -120,7 +120,7 @@ class TokenDeleteUserView(APIView):
     def delete(self, request):
         request.user.delete()
         return Response(
-            {"message": "회원 탈퇴 완료"}, status=status.HTTP_204_NO_CONTENT
+            {"message": "Status 204 No Content"}, status=status.HTTP_204_NO_CONTENT
         )
 
 
